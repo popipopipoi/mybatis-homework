@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ohgiraffers.section01.model.mapper.DynamicSqlMapper">
+
+    <resultMap id="locationResultMap" type="LocationDTO">
+        <id property="code" column="LOCATION_CODE"/>
+        <result property="name" column="LOCATION_NAME"/>
+        <result property="menu" column="RECOMMENDED_MENU"/>
+        <result property="categoryCode" column="CATEGORY_CODE"/>
+        <result property="subway" column="NEAR_SUBWAY"/>
+    </resultMap>
+
+    <select id="searchLocation" resultMap="locationResultMap" parameterType="SearchCriteria">
+        SELECT
+               LOCATION_CODE
+             , LOCATION_NAME
+             , RECOMMENDED_MENU
+             , CATEGORY_CODE
+             , NEAR_SUBWAY
+          FROM TB_LOCATION
+        <if test="condition == 'category'">
+            JOIN TB_CATEGORY USING(CATEGORY_CODE)
+        </if>
+        <if test="condition == 'name'">
+            AND LOCATION_NAME LIKE '%' || #{ value } || '%'
+        </if>
+        WHERE 1=1
+        <if test="condition == 'category'">
+            AND CATEGORY_NAME = #{ value }
+        </if>
+        ORDER BY LOCATION_CODE
+    </select>
+</mapper>

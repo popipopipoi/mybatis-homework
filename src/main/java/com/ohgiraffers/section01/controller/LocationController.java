@@ -1,60 +1,85 @@
 package com.ohgiraffers.section01.controller;
 
-import com.ohgiraffers.section01.common.SearchCriteria;
+import com.ohgiraffers.section01.model.dto.LocationDTO;
 import com.ohgiraffers.section01.model.service.LocationService;
+import com.ohgiraffers.section01.view.PrintResult;
 
-import java.util.Scanner;
+import java.util.List;
+import java.util.Map;
 
 public class LocationController {
-    public static void subLocation() {
 
-        Scanner sc = new Scanner(System.in);
+    private final LocationService locationService;
+    private final PrintResult printResult;
 
-        do{
-            System.out.println("======== 조회하기 ========");
-            System.out.println("1. 지역별로 리스트 보기");
-            System.out.println("2. 랜덤으로 추천받기");
-            System.out.println("9. 종료하기");
-            System.out.print("메뉴를 선택하세요 : ");
-            int no = sc.nextInt();
+    public LocationController() {
+        locationService = new LocationService();
+        printResult = new PrintResult();
+    }
+    public void selectAllLocation() {
 
-            switch (no) {
-                case 1 : ifSubMenu(); break;
-                case 9 :
-                    System.out.println("프로그램을 종료합니다. "); break;
-            }
-        }while (true);
+        List<LocationDTO> locationList = locationService.selectAllLocation();
+
+        if(locationList != null) {
+            printResult.printLocationList(locationList);
+        } else {
+            printResult.printErrorMessage("selectList");
+        }
     }
 
-    private static void ifSubMenu() {
-        Scanner sc = new Scanner(System.in);
-        LocationService locationService = new LocationService();
+    public void registLocation(Map<String, String> parameter) {
 
-        do{
-            System.out.println("======== 지역별로 리스트 보기 ========");
-            System.out.println("1. 메뉴 이름 혹은 지역별로 검색하여 장소 보여주기");
-            System.out.println("9. 이전메뉴로");
-            System.out.print("번호를 입력해주세요 : ");
-            int no = sc.nextInt();
+        String name = parameter.get("name");
+        String menu = parameter.get("menu");
+        int categoryCode = Integer.parseInt(parameter.get("categoryCode"));
+        String subway = parameter.get("subway");
 
-            switch (no) {
-                case 1 : locationService.searchLocation(inputSearchCriteria()); break;
-                case 9 : return;
-            }
-        } while (true);
+        LocationDTO location = new LocationDTO();
+        location.setName(name);
+        location.setMenu(menu);
+        location.setCategoryCode(categoryCode);
+        location.setSubway(subway);
+
+        if(locationService.registLocation(location)) {
+            printResult.printSuccessMessage("insert");
+        } else {
+            printResult.printErrorMessage("insert");
+        }
     }
 
-    private static SearchCriteria inputSearchCriteria() {
+    public void modifyLocation(Map<String, String> parameter) {
 
-        Scanner sc = new Scanner(System.in);
+        int code = Integer.parseInt(parameter.get("code"));
+        String name = parameter.get("name");
+        String menu = parameter.get("menu");
+        int categoryCode = Integer.parseInt(parameter.get("categoryCode"));
+        String subway = parameter.get("subway");
 
-        System.out.print("검색 기준을 입력해주세요 (name or category) : ");
-        String condition = sc.nextLine();
-        System.out.print("검색어를 입력해주세요 : ");
-        String value = sc.nextLine();
+        LocationDTO location = new LocationDTO();
+        location.setCode(code);
+        location.setName(name);
+        location.setMenu(menu);
+        location.setCategoryCode(categoryCode);
+        location.setSubway(subway);
 
-        return new SearchCriteria(condition, value);
+        if(locationService.modifyLocation(location)) {
+            printResult.printSuccessMessage("update");
+        } else {
+            printResult.printErrorMessage("update");
+        }
     }
 
+    public void deleteLocation(Map<String, String> parameter) {
 
+        int code = Integer.parseInt(parameter.get("code"));
+
+        LocationDTO location = new LocationDTO();
+        location.setCode(code);
+
+        if(locationService.deleteLocation(location)){
+            printResult.printSuccessMessage("delete");
+        } else {
+            printResult.printErrorMessage("delete");
+        }
+    }
 }

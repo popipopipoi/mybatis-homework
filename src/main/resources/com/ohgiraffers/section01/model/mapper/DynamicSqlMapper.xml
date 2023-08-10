@@ -33,4 +33,19 @@
         </if>
         ORDER BY LOCATION_CODE
     </select>
+
+    <select id="searchLocationByRandomLocationCode" resultMap="locationResultMap" parameterType="hashmap">
+        SELECT
+               LOCATION_CODE
+             , LOCATION_NAME
+             , RECOMMENDED_MENU
+             , CATEGORY_CODE
+             , NEAR_SUBWAY
+          FROM TB_LOCATION
+         WHERE 1=1
+           AND LOCATION_CODE IN
+        <foreach collection="randomLocationCodeList" item="locationCode" open="(" separator="," close=")">
+            #{ locationCode }
+        </foreach>
+    </select>
 </mapper>

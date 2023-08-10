@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ohgiraffers.section01.model.mapper.LocationMapper">
+
+    <resultMap id="locationResultMap" type="com.ohgiraffers.section01.model.dto.LocationDTO">
+        <id property="code" column="LOCATION_CODE"/>
+        <result property="name" column="LOCATION_NAME"/>
+        <result property="menu" column="RECOMMENDED_MENU"/>
+        <result property="categoryCode" column="CATEGORY_CODE"/>
+        <result property="subway" column="NEAR_SUBWAY"/>
+    </resultMap>
+    <select id="selectAllLocation" resultMap="locationResultMap">
+        SELECT
+               LOCATION_CODE
+             , LOCATION_NAME
+             , RECOMMENDED_MENU
+             , CATEGORY_CODE
+             , NEAR_SUBWAY
+          FROM TB_LOCATION
+         WHERE 1=1
+         ORDER BY LOCATION_CODE
+    </select>
+
+    <insert id="insertLocation" parameterType="com.ohgiraffers.section01.model.dto.LocationDTO">
+        INSERT
+          INTO TB_LOCATION
+        (
+          LOCATION_CODE
+        , LOCATION_NAME
+        , RECOMMENDED_MENU
+        , CATEGORY_CODE
+        , NEAR_SUBWAY
+        )
+        VALUES
+        (
+          SEQ_LOCATION_CODE.NEXTVAL
+        , #{ name }
+        , #{ menu }
+        , #{ categoryCode}
+        , #{ subway}
+        )
+    </insert>
+
+    <update id="updateLocation" parameterType="com.ohgiraffers.section01.model.dto.LocationDTO">
+        UPDATE TB_LOCATION
+           SET LOCATION_NAME = #{ name }
+             , RECOMMENDED_MENU = #{ menu }
+             , NEAR_SUBWAY = #{ subway }
+         WHERE LOCATION_CODE = #{ code }
+    </update>
+
+    <delete id="deleteLocation" parameterType="_int">
+        DELETE
+          FROM TB_LOCATION
+         WHERE LOCATION_CODE = #{ code }
+    </delete>
+</mapper>

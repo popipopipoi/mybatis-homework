@@ -1,0 +1,85 @@
+DROP SEQUENCE SEQ_CATEGORY_CODE;
+DROP SEQUENCE SEQ_LOCATION_CODE;
+
+CREATE SEQUENCE SEQ_CATEGORY_CODE;
+CREATE SEQUENCE SEQ_LOCATION_CODE;
+
+DROP TABLE tb_categoey CASCADE CONSTRAINTS;
+DROP TABLE tb_location CASCADE CONSTRAINTS;
+
+CREATE TABLE tb_category
+(
+    category_code   NUMBER NOT NULL,
+    category_name   VARCHAR2(30) NOT NULL,
+    ref_category_name   VARCHAR2(30) NOT NULL
+);
+
+COMMENT ON COLUMN tb_category.category_code IS '카테고리코드';
+COMMENT ON COLUMN tb_category.category_name IS '카테고리명';
+COMMENT ON COLUMN tb_category.ref_category_name IS '상위카테고리명';
+
+CREATE UNIQUE INDEX index_category_code ON tb_category
+( category_code);
+
+ALTER TABLE tb_category
+ ADD CONSTRAINT pk_categoet_code PRIMARY KEY ( category_code )
+ USING INDEX index_category_code;
+
+CREATE TABLE tb_location
+(
+    location_code   NUMBER NOT NULL,
+    location_name   VARCHAR2(30) NOT NULL,
+    recommended_menu VARCHAR2(30) NOT NULL,
+    category_code   NUMBER NOT NULL,
+    near_subway     VARCHAR2(30) NOT NULL
+);
+
+COMMENT ON COLUMN tb_location.location_code IS '장소코드';
+COMMENT ON COLUMN tb_location.location_name IS '장소이름';
+COMMENT ON COLUMN tb_location.recommended_menu IS '추천메뉴';
+COMMENT ON COLUMN tb_location.category_code IS '카테고리코드';
+COMMENT ON COLUMN tb_location.near_subway IS '근처역';
+
+CREATE UNIQUE INDEX index_location_code ON tb_location
+( location_code );
+
+ALTER TABLE tb_location
+ ADD CONSTRAINT pk_location_code PRIMARY KEY ( location_code )
+ USING INDEX index_locaion_code;
+ 
+ALTER TABLE tb_locaion
+ ADD CONSTRAINT fk_category_code FOREIGN KEY ( category_code )
+ REFERENCES tb_category ( category_code );
+ 
+INSERT INTO TB_CATEGORY VALUES (SEQ_CATEGORY_CODE.NEXTVAL, '노원구');
+INSERT INTO TB_CATEGORY VALUES (SEQ_CATEGORY_CODE.NEXTVAL, '강북구');
+INSERT INTO TB_CATEGORY VALUES (SEQ_CATEGORY_CODE.NEXTVAL, '종로구');
+INSERT INTO TB_CATEGORY VALUES (SEQ_CATEGORY_CODE.NEXTVAL, '중구');
+INSERT INTO TB_CATEGORY VALUES (SEQ_CATEGORY_CODE.NEXTVAL, '용산구');
+INSERT INTO TB_CATEGORY VALUES (SEQ_CATEGORY_CODE.NEXTVAL, '강남구');
+INSERT INTO TB_CATEGORY VALUES (SEQ_CATEGORY_CODE.NEXTVAL, '마포구');
+INSERT INTO TB_CATEGORY VALUES (SEQ_CATEGORY_CODE.NEXTVAL, '동대문구');
+
+INSERT INTO TB_LOCATION VALUES (seq_location_code.nextval, '소우주', '밀푀유나베', 1, '노원역');
+INSERT INTO TB_LOCATION VALUES (seq_location_code.nextval, '땅코참숯구이', '삼겹살', 1, '노원역');
+INSERT INTO TB_LOCATION VALUES (seq_location_code.nextval, '매그넘', '고르곤졸라피자', 1, '창동역');
+INSERT INTO TB_LOCATION VALUES (seq_location_code.nextval, '단풍관', '초리조파스타', 2, '수유역');
+INSERT INTO TB_LOCATION VALUES (seq_location_code.nextval, '모모술방', '감바스&치아바타', 2, '수유역');
+INSERT INTO TB_LOCATION VALUES (seq_location_code.nextval, '모전자전', '모듬전', 2, '수유역');
+
+INSERT INTO TB_LOCATION VALUES (seq_location_code.nextval, '금잔화', '아롱사태모둠전골', 2, '미아사거리역');
+INSERT INTO TB_LOCATION VALUES (seq_location_code.nextval, '유월', '유월한접시', 2, '미아사거리역');
+INSERT INTO TB_LOCATION VALUES (seq_location_code.nextval, '나정순할매쭈꾸미', '쭈꾸미', 8, '신설동역');
+INSERT INTO TB_LOCATION VALUES (seq_location_code.nextval, '마요', '모둠꼬치', 4, '신당역');
+INSERT INTO TB_LOCATION VALUES (seq_location_code.nextval, '연길반점', '어향가지', 4, '회현역');
+
+INSERT INTO TB_LOCATION VALUES (seq_location_code.nextval, '창신동매운족발', '매운족발', 3, '동대문역');
+INSERT INTO TB_LOCATION VALUES (seq_location_code.nextval, '루시드', '브런치', 7, '상수역');
+INSERT INTO TB_LOCATION VALUES (seq_location_code.nextval, '꺼거', '오이무침', 5, '용산역');
+INSERT INTO TB_LOCATION VALUES (seq_location_code.nextval, '을지장만옥', '산동식마늘쫑면', 4, '을지로3가역');
+INSERT INTO TB_LOCATION VALUES (seq_location_code.nextval, '을지로골뱅이', '골뱅이', 4, '을지로3가역');
+
+INSERT INTO TB_LOCATION VALUES (seq_location_code.nextval, '단골집', '매콤크림파스타', 5, '이태원역');
+INSERT INTO TB_LOCATION VALUES (seq_location_code.nextval, '쟈니덤플링', '군만두반달', 5, '이태원역');
+INSERT INTO TB_LOCATION VALUES (seq_location_code.nextval, '소우주', '밀푀유나베', 1, '노원역');
+INSERT INTO TB_LOCATION VALUES (seq_location_code.nextval, '새늘', '삼겹살전', 4, '충무로역');

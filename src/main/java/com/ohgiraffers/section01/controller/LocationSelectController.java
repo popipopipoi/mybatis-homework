@@ -55,7 +55,7 @@ public class LocationSelectController {
 
         System.out.print("검색 기준을 입력해주세요 (name or category) : ");
         String condition = sc.nextLine();
-        System.out.print("검색어를 입력해주세요(노원구, 강북구, 중구, 동대문구, 종로구, 용산구, 강남구, 마포구) : ");
+        System.out.print("검색어를 입력해주세요 : ");
         String value = sc.nextLine();
 
         return new SearchCriteria(condition, value);
